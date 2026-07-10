@@ -39,11 +39,6 @@ function Gameboard() {
         return { ...gameboard }
     }
 
-
-
-    // Function for delivering a move inside the board
-    // function should take: Move, row, column
-
     function makeMove(row, column, symbol) {
         const keyToLookUp = `row${row}`
         // console.log(gameboard[keyToLookUp][column - 1]);
@@ -60,41 +55,44 @@ function Gameboard() {
         return gameboard
     }
 
-
-    // Also, make a function for resetting the gameboard back to nulls, for future use when it's time to reset.
-
     return { printBoard, makeMove, resetBoard }
 }
 
 let board = Gameboard();
 
-// board.makeMove(3, 1, "tanvir");
-// board.makeMove(2, 2, "tanvir");
-// board.makeMove(1, 3, "tanvir");
-// console.log(board.printBoard());
-// board.resetBoard();
-// console.log(board.printBoard());
-
 
 function GameState() {
     let state = 1;
+    let symbol;
+
+    function resetGame() {
+        board.resetBoard();
+        state = 1;
+        console.log("Game has been reset. Play your first move.");
+        return state
+    }
 
     function win() {
-        console.log("Winner Found!")
-        console.log("Resetting Board....")
-        // logic for resetting game:
+        let winner;
+        if (symbol === "X") {
+            winner = "Player 1"
+        } else if (symbol === "O") {
+            winner = "Player 2"
+        }
+        console.log(`${winner}, with symbol ${symbol}, has won!`);
+        console.log("Resetting Board....");
+        resetGame();
     }
 
     function draw() {
         console.log("It's a Draw!!");
-        console.log("Resetting Board...")
-        // reset logic:
+        console.log("Resetting Board...");
+        resetGame();
     }
 
 
 
     function passMove(row, col) {
-        let symbol;
         if (state % 2 === 0) {
             symbol = "O";
         } else if (state % 2 === 1) {
@@ -112,11 +110,12 @@ function GameState() {
 
         state++
         evalMove(board.printBoard());
+        console.log(board.printBoard());
         return state
     }
 
     function evalMove(Board) {
-        let boardHolder = { ...Board };
+        let boardHolder = structuredClone(Board); // THIS was the bug, claude. I changed the spread with this structuredClone thing once AI told me.
 
         boardHolder["row1"].forEach((item, index, array) => {
             if (item === "X" || item === "O") {
@@ -139,8 +138,6 @@ function GameState() {
             } else { array[index] = Math.random(); }
         })
 
-
-        console.log(boardHolder)
         const r1c1 = boardHolder["row1"][0]
         const r1c2 = boardHolder["row1"][1]
         const r1c3 = boardHolder["row1"][2]
@@ -152,9 +149,7 @@ function GameState() {
         const r3c3 = boardHolder["row3"][2]
 
 
-        if (state > 9) {
-            draw();
-        } else if (r1c1 === r2c2 && r2c2 === r3c3) {
+        if (r1c1 === r2c2 && r2c2 === r3c3) {
             win() // corner 1 
         } else if (r1c3 === r2c2 && r2c2 === r3c1) {
             win() // corner 2
@@ -170,17 +165,13 @@ function GameState() {
             win() // column 2
         } else if (r1c3 === r2c3 && r2c3 === r3c3) {
             win() // column 3
-        } else { console.log("nothin'") }
+        } else if (state > 9) { draw() }
 
     }
 
     function getState() {
         console.log(state)
     }
-
-
-
-    // think about how you'll figure out WHICH player wins afterwards, but first just make it to deduct any side as the winner
 
     return { passMove, getState, evalMove }
 
@@ -192,34 +183,3 @@ console.log(board.printBoard());
 
 
 
-
-
-// SANDBOX
-
-/* let boardHolder = {
-    "row1": ["X", "O", "X"],
-    "row2": ["X", "O", "O"],
-    "row3": ["O", "X", null]
-}
-
-boardHolder["row1"].forEach((item, index, array) => {
-    if (item === "X" || item === "O") {
-        return
-
-    } else { array[index] = Math.random(); }
-})
-
-boardHolder["row2"].forEach((item, index, array) => {
-    if (item === "X" || item === "O") {
-        return
-
-    } else { array[index] = Math.random(); }
-})
-
-boardHolder["row3"].forEach((item, index, array) => {
-    if (item === "X" || item === "O") {
-        return
-
-    } else { array[index] = Math.random(); }
-})
-console.log(boardHolder) */
