@@ -170,7 +170,7 @@ function GameState() {
     }
 
     function getState() {
-        console.log(state)
+        return { ...state }
     }
 
     return { passMove, getState, evalMove }
@@ -181,5 +181,51 @@ let g1 = GameState();
 
 console.log(board.printBoard());
 
+const domGameBoard = document.querySelector('#gameboard');
 
+
+
+
+function renderBoard() {
+    let boardHolder = structuredClone(board.printBoard());
+    const r1c1 = boardHolder["row1"][0];
+    const r1c2 = boardHolder["row1"][1];
+    const r1c3 = boardHolder["row1"][2];
+    const r2c1 = boardHolder["row2"][0];
+    const r2c2 = boardHolder["row2"][1];
+    const r2c3 = boardHolder["row2"][2];
+    const r3c1 = boardHolder["row3"][0];
+    const r3c2 = boardHolder["row3"][1];
+    const r3c3 = boardHolder["row3"][2];
+
+    const cell11 = document.querySelector('.r1-1');
+    const cell12 = document.querySelector('.r1-2');
+    const cell13 = document.querySelector('.r1-3');
+    const cell21 = document.querySelector('.r2-1');
+    const cell22 = document.querySelector('.r2-2');
+    const cell23 = document.querySelector('.r2-3');
+    const cell31 = document.querySelector('.r3-1');
+    const cell32 = document.querySelector('.r3-2');
+    const cell33 = document.querySelector('.r3-3');
+
+    cell11.innerText = r1c1;
+    cell12.innerText = r1c2;
+    cell13.innerText = r1c3;
+    cell21.innerText = r2c1;
+    cell22.innerText = r2c2;
+    cell23.innerText = r2c3;
+    cell31.innerText = r3c1;
+    cell32.innerText = r3c2;
+    cell33.innerText = r3c3;
+
+
+}
+
+domGameBoard.addEventListener('click', (event) => {
+    if (event.target.classList.contains('cell') === false) { return }
+    const row = event.target.dataset.row;
+    const column = event.target.dataset.column;
+    g1.passMove(row, column);
+    renderBoard();
+});
 

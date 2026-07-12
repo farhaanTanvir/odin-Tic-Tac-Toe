@@ -1,0 +1,26 @@
+body {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+}
+
+#gameboard {
+    margin: 100px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+
+}
+
+.cell {
+    background-color: white;
+    height: 150px;
+    width: 150px;
+    font-weight: bold;
+    font-size: 9rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Lexend', sans-serif;
+    font-weight: 700;
+}
