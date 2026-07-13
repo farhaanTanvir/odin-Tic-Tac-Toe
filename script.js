@@ -1,30 +1,24 @@
-function createPlayers() {
-    const player1 = new Object();
-    const player2 = new Object();
-    player1.name = "Player 1";
-    player2.name = "Player 2";
-    player1.symbol = 1;
-    player2.symbol = 5;
-    // console.log({ player1, player2 });
-    function getPlayer1() {
-        return { ...player1 };
-    }
+const display = document.querySelector('.dialogue');
+const startBtn = document.querySelector('.startbtn');
+const resetBtn = document.querySelector('.resetbtn');
+const domGameBoard = document.querySelector('#gameboard');
+let player1 = null;
+let player2 = null;
 
-    function getPlayer2() {
-        return { ...player2 };
-    }
-
-    return { getPlayer1, getPlayer2 }
+function createPlayers(name, symbol) {
+    return { name: name, symbol: symbol }
 }
 
-
-
-const players = createPlayers();
-
-// console.log(players.getPlayer2().symbol)
-
-// console.log(players.player2.name)
-
+startBtn.addEventListener('click', () => {
+    if (player1 !== null) { return }
+    const name = prompt("Enter the name of the first player")
+    const name2 = prompt("Enter the name of the second player")
+    player1 = createPlayers(name, "X");
+    player2 = createPlayers(name2, "O");
+    display.innerText = "Make your moves!"
+    g1.flipNameFlag();
+    return { player1, player2 }
+});
 
 function Gameboard() {
     let gameboard = {
@@ -60,39 +54,50 @@ function Gameboard() {
 
 let board = Gameboard();
 
-
 function GameState() {
     let state = 1;
     let symbol;
+    let winstate = false;
+    let hasNames = false;
+
+    function flipNameFlag() {
+        hasNames = true
+        return hasNames
+    }
 
     function resetGame() {
         board.resetBoard();
         state = 1;
         console.log("Game has been reset. Play your first move.");
-        return state
+        winstate = false;
+        return { state, winstate }
     }
 
     function win() {
         let winner;
         if (symbol === "X") {
-            winner = "Player 1"
+            winner = player1
         } else if (symbol === "O") {
-            winner = "Player 2"
+            winner = player2
         }
-        console.log(`${winner}, with symbol ${symbol}, has won!`);
         console.log("Resetting Board....");
-        resetGame();
+        display.innerText = `${winner.name}, with symbol ${symbol}, has won!<br>Press the 'Reset Game' button to play again.`
+        winstate = true;
+        return winstate;
     }
 
     function draw() {
         console.log("It's a Draw!!");
         console.log("Resetting Board...");
-        resetGame();
+        display.innerText = `It's a draw!!`
+        winstate = true;
+        return winstate;
     }
 
-
-
     function passMove(row, col) {
+        if (winstate === true) { return }
+        if (hasNames === false) { return }
+
         if (state % 2 === 0) {
             symbol = "O";
         } else if (state % 2 === 1) {
@@ -115,7 +120,7 @@ function GameState() {
     }
 
     function evalMove(Board) {
-        let boardHolder = structuredClone(Board); // THIS was the bug, claude. I changed the spread with this structuredClone thing once AI told me.
+        let boardHolder = structuredClone(Board);
 
         boardHolder["row1"].forEach((item, index, array) => {
             if (item === "X" || item === "O") {
@@ -148,7 +153,6 @@ function GameState() {
         const r3c2 = boardHolder["row3"][1]
         const r3c3 = boardHolder["row3"][2]
 
-
         if (r1c1 === r2c2 && r2c2 === r3c3) {
             win() // corner 1 
         } else if (r1c3 === r2c2 && r2c2 === r3c1) {
@@ -169,22 +173,11 @@ function GameState() {
 
     }
 
-    function getState() {
-        return { ...state }
-    }
-
-    return { passMove, getState, evalMove }
+    return { passMove, resetGame, flipNameFlag }
 
 }
 
 let g1 = GameState();
-
-console.log(board.printBoard());
-
-const domGameBoard = document.querySelector('#gameboard');
-
-
-
 
 function renderBoard() {
     let boardHolder = structuredClone(board.printBoard());
@@ -217,8 +210,6 @@ function renderBoard() {
     cell31.innerText = r3c1;
     cell32.innerText = r3c2;
     cell33.innerText = r3c3;
-
-
 }
 
 domGameBoard.addEventListener('click', (event) => {
@@ -229,3 +220,12 @@ domGameBoard.addEventListener('click', (event) => {
     renderBoard();
 });
 
+resetBtn.addEventListener('click', () => {
+    g1.resetGame();
+    renderBoard();
+    display.innerText = "Make your moves!"
+});
+
+
+// Fix the input validation bug on entering names
+// Put as much code into objects
