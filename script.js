@@ -11,15 +11,12 @@ function Gameboard() {
         "row3": [null, null, null]
     }
 
-    // FUNCTION to log the board
     function printBoard() {
-        // console.log(gameboard);
         return { ...gameboard }
     }
 
     function makeMove(row, column, symbol) {
         const keyToLookUp = `row${row}`
-        // console.log(gameboard[keyToLookUp][column - 1]);
         gameboard[keyToLookUp][column - 1] = symbol;
         return gameboard
     }
@@ -52,7 +49,6 @@ function GameState() {
     function resetGame() {
         board.resetBoard();
         state = 1;
-        console.log("Game has been reset. Play your first move.");
         winstate = false;
         return { state, winstate }
     }
@@ -64,15 +60,12 @@ function GameState() {
         } else if (symbol === "O") {
             winner = player2
         }
-        console.log("Resetting Board....");
         display.innerText = `${winner.name}, with symbol ${symbol}, has won!<br>Press the 'Reset Game' button to play again.`
         winstate = true;
         return winstate;
     }
 
     function draw() {
-        console.log("It's a Draw!!");
-        console.log("Resetting Board...");
         display.innerText = `It's a draw!!`
         winstate = true;
         return winstate;
@@ -91,7 +84,6 @@ function GameState() {
         const keyToLookUp = `row${row}`
         const key = boardHolder[keyToLookUp][col - 1]
         if (key !== null) {
-            console.log("Cell already taken!") // FOR HANDLING TAKEN CELLS
             return
         } else if (key === null) {
             board.makeMove(row, col, symbol);
@@ -99,7 +91,6 @@ function GameState() {
 
         state++
         evalMove(board.printBoard());
-        console.log(board.printBoard());
         return state
     }
 
@@ -219,8 +210,8 @@ function renderBoard() {
 
     startBtn.addEventListener('click', () => {
         if (player1 !== null) { return }
-        const name = prompt("Enter the name of the first player")
-        const name2 = prompt("Enter the name of the second player")
+        const name = prompt("Enter the name of the first player");
+        const name2 = prompt("Enter the name of the second player");
         player1 = createPlayers(name, "X");
         player2 = createPlayers(name2, "O");
         display.innerText = "Make your moves!"
@@ -229,5 +220,11 @@ function renderBoard() {
     });
 })();
 
-// Fix the input validation bug on entering names
+/* CLOSING */
+
 // 4 Lines failed to remove from the global scope. And I have no idea how to lol.
+
+// Input validation for entering names has been skipped. entering the wrong type dosen't break the game, so it's not necessary. If someone's got numbers in their names, then that's their business. So I won't bother
+
+// Finished: 14 July 2026. Farhan Tanvir
+
