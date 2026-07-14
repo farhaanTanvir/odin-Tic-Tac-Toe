@@ -9,6 +9,7 @@ function createPlayers(name, symbol) {
     return { name: name, symbol: symbol }
 }
 
+
 startBtn.addEventListener('click', () => {
     if (player1 !== null) { return }
     const name = prompt("Enter the name of the first player")
@@ -19,6 +20,8 @@ startBtn.addEventListener('click', () => {
     g1.flipNameFlag();
     return { player1, player2 }
 });
+
+
 
 function Gameboard() {
     let gameboard = {
@@ -177,7 +180,11 @@ function GameState() {
 
 }
 
-let g1 = GameState();
+
+let g1 = GameState(); // Putting this inside an IIFE, even with return statements, breaks the game.
+// We COULD solve this by declaring this inside the last IIFE below, but we need to call g1 above one time aswell so that wouldn't work.
+// You'll need a workaround to the first g1 call if you want this to work.
+
 
 function renderBoard() {
     let boardHolder = structuredClone(board.printBoard());
@@ -212,20 +219,21 @@ function renderBoard() {
     cell33.innerText = r3c3;
 }
 
-domGameBoard.addEventListener('click', (event) => {
-    if (event.target.classList.contains('cell') === false) { return }
-    const row = event.target.dataset.row;
-    const column = event.target.dataset.column;
-    g1.passMove(row, column);
-    renderBoard();
-});
+(function () {
+    domGameBoard.addEventListener('click', (event) => {
+        if (event.target.classList.contains('cell') === false) { return }
+        const row = event.target.dataset.row;
+        const column = event.target.dataset.column;
+        g1.passMove(row, column);
+        renderBoard();
+    });
 
-resetBtn.addEventListener('click', () => {
-    g1.resetGame();
-    renderBoard();
-    display.innerText = "Make your moves!"
-});
-
+    resetBtn.addEventListener('click', () => {
+        g1.resetGame();
+        renderBoard();
+        display.innerText = "Make your moves!"
+    });
+})();
 
 // Fix the input validation bug on entering names
 // Put as much code into objects
