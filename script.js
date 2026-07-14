@@ -60,7 +60,7 @@ function GameState() {
         } else if (symbol === "O") {
             winner = player2
         }
-        display.innerText = `${winner.name}, with symbol ${symbol}, has won!<br>Press the 'Reset Game' button to play again.`
+        display.innerText = `${winner.name}, with symbol ${symbol}, has won! Press the 'Reset Game' button to play again.`
         winstate = true;
         return winstate;
     }
