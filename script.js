@@ -9,11 +9,6 @@ function createPlayers(name, symbol) {
     return { name: name, symbol: symbol }
 }
 
-
-
-
-
-
 function Gameboard() {
     let gameboard = {
         "row1": [null, null, null],
@@ -46,7 +41,7 @@ function Gameboard() {
     return { printBoard, makeMove, resetBoard }
 }
 
-let board = Gameboard();
+let board = Gameboard(); // I HAVE FAILED TO ENCAPSULATE THIS. This is called in two different functions, so zero idea how I'd remove this from global scope
 
 function GameState() {
     let state = 1;
@@ -168,7 +163,6 @@ function GameState() {
     }
 
     return { passMove, resetGame, flipNameFlag }
-
 }
 
 function renderBoard() {
