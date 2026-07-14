@@ -1,13 +1,13 @@
 const display = document.querySelector('.dialogue');
-const startBtn = document.querySelector('.startbtn');
-const resetBtn = document.querySelector('.resetbtn');
-const domGameBoard = document.querySelector('#gameboard');
+
 let player1 = null;
 let player2 = null;
 
 function createPlayers(name, symbol) {
     return { name: name, symbol: symbol }
 }
+
+// Failed to encapsulate code above this comment too. Cuz these are variables we'll need in the global scope too.
 
 function Gameboard() {
     let gameboard = {
@@ -200,6 +200,9 @@ function renderBoard() {
 
 (function () {
     let g1 = GameState();
+    const startBtn = document.querySelector('.startbtn');
+    const resetBtn = document.querySelector('.resetbtn');
+    const domGameBoard = document.querySelector('#gameboard');
     domGameBoard.addEventListener('click', (event) => {
         if (event.target.classList.contains('cell') === false) { return }
         const row = event.target.dataset.row;
